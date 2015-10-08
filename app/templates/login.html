@@ -1,0 +1,6 @@
+<form method="POST" action="/login">
+    {{ form.hidden_tag() }}
+    <div>{{ form.email.label }}: {{ form.email()}}</div>
+    <div>{{ form.password.label }}: {{ form.password() }}</div>
+    <div>{{ form.remember_me.label }}: {{ form.remember_me() }}</div>
+</form>
