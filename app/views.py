@@ -1,7 +1,8 @@
 from flask import abort, flash, jsonify, redirect, render_template, request, url_for
 from flask_login import login_required, login_user, LoginManager
 
-from bot import callback
+from app import app
+from bot import get_callback
 from forms import LoginForm, RegisterForm
 
 
@@ -13,7 +14,7 @@ def index():
 
 @app.route('/bot/callback', methods=['GET', 'POST'])
 def bot_callback():
-    callback(request.get_json())
+    get_callback(request)
     return 'Callback'
 
 

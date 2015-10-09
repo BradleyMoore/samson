@@ -1,8 +1,8 @@
 import json, requests
 
-from app.config import ACCESS_TOKEN, BASE_URL
-from app.config import LEADERSHIP_BOT_ID, LEADERSHIP_GROUP_ID
-from app.config import SAMSON_BOT_ID, SAMSON_GROUP_ID
+from config import ACCESS_TOKEN, BASE_URL
+from config import LEADERSHIP_BOT_ID, LEADERSHIP_GROUP_ID
+from config import SAMSON_BOT_ID, SAMSON_GROUP_ID
 
 
 def get_bot_id(group_id):
@@ -22,14 +22,12 @@ def list_members(group_id):
     data = json.loads(r.content)
     node = data['response']['members']
 
-    members = []
+    members = {}
     for member in node:
-        members.append(member['nickname'], member['id'])
-
-    member_string = '\n'.join'%s, %s' % tup for tup in members
+        members[member['id']: member['nickname']]
 
     bot_id = get_bot_id(group_id)
-    post(bot_id, member_string)
+    post(bot_id, members)
 
 
 def remove_member(group_id, member_id):
@@ -69,8 +67,8 @@ def post(bot_id, message):
     r = requests.post(url, params = payload)
 
 
-def get_callback(message):
-    data = json.loads(message)
+def get_callback(callback):
+    data = json.loads(callback)
     node = data['response']
     group_id = node['group_id']
     text = node['text']
@@ -78,8 +76,13 @@ def get_callback(message):
     if group_id == LEADERSHIP_GROUP_ID:
         bot_needed, command, message = parse_callback(text)
 
+        if not bot_needed:
+            return
+
         if command == 'post':
             post(SAMSON_BOT_ID, message)
+
+    return callback
 
 
 def parse_callback(text):
