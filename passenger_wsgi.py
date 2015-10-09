@@ -1,4 +1,4 @@
-import sys.os
+import sys, os
 
 
 virt_binary = '/home/flawles1/samson/bin/python'
