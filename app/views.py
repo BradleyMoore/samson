@@ -12,7 +12,7 @@ def index():
 
 
 @app.route('/bot/callback/<callback_message>', methods=['GET', 'POST'])
-def bot_callback():
+def bot_callback(callback_message):
     #callback = get_callback(callback_message)
     return callback_message
 
