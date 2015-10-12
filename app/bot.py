@@ -69,8 +69,8 @@ def post(bot_id, message):
 
 def get_callback(callback):
     f = open('callback.txt', 'w')
-    for line in callback:
-        f.write(line)
+    for line in json.dumps(callback):
+	f.write(line)
     f.close()
 
     data = json.loads(callback)

@@ -11,10 +11,10 @@ def index():
     return 'Samson Society'
 
 
-@app.route('/bot/callback', methods=['GET', 'POST'])
+@app.route('/bot/callback/<callback_message>', methods=['GET', 'POST'])
 def bot_callback():
-    get_callback(request)
-    return 'Callback'
+    #callback = get_callback(callback_message)
+    return callback_message
 
 
 #@app.route('/bot/post')
