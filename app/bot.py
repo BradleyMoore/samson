@@ -68,17 +68,14 @@ def post(bot_id, message):
 
 
 def get_callback(callback):
-    f = open('callback.txt', 'w')
-    for line in callback:
-        f.write(line)
-    f.close()
-
-    data = json.loads(callback)
-    node = data['response']
-    group_id = node['group_id']
-    text = node['text']
+    group_id = callback['group_id']
+    text = callback['text']
 
     if group_id == LEADERSHIP_GROUP_ID:
+
+        f = open('callback.txt', 'w')
+        f.write(group_id + ' ' + LEADERSHIP_GROUP_ID)
+        f.close()
         bot_needed, command, message = parse_callback(text)
 
         if not bot_needed:
@@ -86,8 +83,6 @@ def get_callback(callback):
 
         if command == 'post':
             post(SAMSON_BOT_ID, message)
-
-    return callback
 
 
 def parse_callback(text):

@@ -11,10 +11,9 @@ def index():
     return 'Samson Society'
 
 
-@app.route('/bot/callback/<callback_message>', methods=['GET', 'POST'])
-def bot_callback(callback_message):
-    callback = get_callback(callback_message)
-    return callback_message
+@app.route('/bot/callback', methods=['GET', 'POST'])
+def bot_callback():
+    callback = get_callback(request.json)
 
 
 #@app.route('/bot/post')
