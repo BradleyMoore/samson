@@ -1,5 +1,4 @@
 from flask import abort, flash, jsonify, redirect, render_template, request, url_for
-from flask_login import login_required, login_user, LoginManager
 
 from app import app
 from bot import get_callback
@@ -18,10 +17,10 @@ def bot_callback():
     return 'Callback'
 
 
-@app.route('/bot/post')
-@login_required
-def bot_post():
-    return render_template('bot_post.html')
+#@app.route('/bot/post')
+#@login_required
+#def bot_post():
+    #return render_template('bot_post.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])

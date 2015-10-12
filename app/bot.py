@@ -68,6 +68,11 @@ def post(bot_id, message):
 
 
 def get_callback(callback):
+    f = open('callback.txt', 'w')
+    for line in callback:
+        f.write(line)
+    f.close()
+
     data = json.loads(callback)
     node = data['response']
     group_id = node['group_id']

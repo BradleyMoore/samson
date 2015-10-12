@@ -1,3 +1,3 @@
 PassengerEnabled on
-PassengerAppRoot /home/flawles1/public_html/samsonsociety.tk/app
-PassengerPython /home/flawles1/samson/bin/python
+PassengerAppRoot /home/flawles1/public_html/samsonsociety.tk
+PassengerPython /home/flawles1/.env/env/bin/python
