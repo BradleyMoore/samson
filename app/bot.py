@@ -96,18 +96,16 @@ def parse_callback(text):
         return (False, None, None)
 
     bots = ['#system']
+    called_bot = None
     for bot in bots:
         if bot in words[0].lower():
             called_bot = bot
-        else:
-            return (False, None, None)
 
     commands = ['add', 'list', 'post', 'remove']
+    called_command = None
     for command in commnads:
         if command in words[1]:
             called_command = command
-        else:
-            return (called_bot, None, None)
 
     command_text = ' '.join(words[2:])
 
