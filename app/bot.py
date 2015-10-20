@@ -68,22 +68,21 @@ def post(bot_id, message):
 
 
 def get_callback(callback):
-    #f = open('callback.txt', 'w')
-    #for line in callback:
-    #    f.write(line)
-    #f.close()
+    f = open('callback.txt', 'w')
+    #callback_json = json.loads(callback)
+    for line in callback:
+        f.write(line)
+    f.close()
 
-    group_id == callback['group_id']
+    group_id = callback['group_id']
     text = callback['text']
 
     if group_id == LEADERSHIP_GROUP_ID:
-        bot_needed, command, message = parse_callback(text)
+        bot, command, message = parse_callback(text)
 
-        if not bot_needed:
-            return
-
-        if command == 'post':
-            post(SAMSON_BOT_ID, message)
+        if bot:
+            if command == 'post':
+                post(SAMSON_BOT_ID, message)
 
     return callback
 
@@ -91,7 +90,7 @@ def get_callback(callback):
 def parse_callback(text):
     words = text.split()
     if len(words) < 3:
-        return (False, None, None)
+        return (None, None, None)
 
     bots = ['#system']
     called_bot = None
@@ -101,10 +100,10 @@ def parse_callback(text):
 
     commands = ['add', 'list', 'post', 'remove']
     called_command = None
-    for command in commnads:
+    for command in commands:
         if command in words[1]:
             called_command = command
 
     command_text = ' '.join(words[2:])
 
-    return (bot_needed, command_called, command_text)
+    return (called_bot, called_command, command_text)
