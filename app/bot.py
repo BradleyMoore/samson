@@ -68,15 +68,13 @@ def post(bot_id, message):
 
 
 def get_callback(callback):
-    f = open('callback.txt', 'w')
+    #f = open('callback.txt', 'w')
     #for line in callback:
     #    f.write(line)
-    f.close()
+    #f.close()
 
-    data = json.loads(callback)
-    node = data['response']
-    group_id = node['group_id']
-    text = node['text']
+    group_id == callback['group_id']
+    text = callback['text']
 
     if group_id == LEADERSHIP_GROUP_ID:
         bot_needed, command, message = parse_callback(text)
