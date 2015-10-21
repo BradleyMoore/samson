@@ -26,6 +26,11 @@ def list_members(group_id):
     for member in node:
         members[member['id']] = member['nickname']
 
+    f = open('callback.txt', 'w')
+    for line in members:
+        f.write(line)
+    f.close()
+
     bot_id = LEADERSHIP_BOT_ID
     post(bot_id, members)
 
