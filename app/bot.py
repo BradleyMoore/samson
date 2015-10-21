@@ -95,7 +95,7 @@ def get_callback(callback):
 
 def parse_callback(text):
     words = text.split()
-    if len(words) < 3:
+    if len(words) < 2:
         return (None, None, None)
 
     bots = ['#system']
@@ -110,6 +110,9 @@ def parse_callback(text):
         if command in words[1]:
             called_command = command
 
-    command_text = ' '.join(words[2:])
+    if len(words) >= 3:
+        command_text = ' '.join(words[2:])
+    else:
+        command_text = None
 
     return (called_bot, called_command, command_text)
