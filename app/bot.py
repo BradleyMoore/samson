@@ -84,9 +84,9 @@ def get_callback(callback):
             if command == 'post':
                 post(SAMSON_BOT_ID, message)
             if command == 'list':
-                if message.lower() == 'samson':
+                if bot == '#samson':
                     group = SAMSON_GROUP_ID
-                else if message.lower() == 'leadership':
+                else if bot == '#helper':
                     group = LEADERSHIP_GROUP_ID
                 list_members(group)
 
@@ -98,11 +98,12 @@ def parse_callback(text):
     if len(words) < 2:
         return (None, None, None)
 
-    bots = ['#system']
+    bots = ['#helper', '#system']
     called_bot = None
     for bot in bots:
         if bot in words[0].lower():
             called_bot = bot
+            break
 
     commands = ['add', 'list', 'post', 'remove']
     called_command = None
