@@ -28,7 +28,7 @@ def list_members(group_id):
 
     members_string = ''
     for key, value in members.iteritems():
-        members_string += '%s -> %s :: ' %(value, key)
+        members_string += '(%s, %s) :: ' %(value, key)
     members_string = members_string[:-4]
 
     bot_id = LEADERSHIP_BOT_ID
