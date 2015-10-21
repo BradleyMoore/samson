@@ -86,7 +86,7 @@ def get_callback(callback):
             if command == 'list':
                 if bot == '#samson':
                     group = SAMSON_GROUP_ID
-                else if bot == '#helper':
+                elif bot == '#helper':
                     group = LEADERSHIP_GROUP_ID
                 list_members(group)
 
