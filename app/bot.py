@@ -89,7 +89,7 @@ def get_callback(callback):
             if command == 'post':
                 post(SAMSON_BOT_ID, message)
             if command == 'list':
-                if bot == '#samson':
+                if bot == '#system':
                     group = SAMSON_GROUP_ID
                 elif bot == '#helper':
                     group = LEADERSHIP_GROUP_ID
