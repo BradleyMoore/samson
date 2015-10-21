@@ -14,7 +14,7 @@ def get_bot_id(group_id):
 
 
 def list_members(group_id):
-    url = BASE_URL + 'groups/' + group_id
+    url = BASE_URL + '/groups/' + group_id
     payload = {"token": ACCESS_TOKEN}
 
     r = requests.get(url, params = payload)
@@ -24,9 +24,9 @@ def list_members(group_id):
 
     members = {}
     for member in node:
-        members[member['id']: member['nickname']]
+        members[member['id']] = member['nickname']
 
-    bot_id = get_bot_id(group_id)
+    bot_id = LEADERSHIP_BOT_ID
     post(bot_id, members)
 
 
@@ -83,6 +83,12 @@ def get_callback(callback):
         if bot:
             if command == 'post':
                 post(SAMSON_BOT_ID, message)
+            if command == 'list':
+                if message.lower() == 'samson':
+                    group = SAMSON_GROUP_ID
+                else if message.lower() == 'leadership':
+                    group = LEADERSHIP_GROUP_ID
+                list_members(group)
 
     return callback
 
