@@ -168,7 +168,7 @@ def check_for_allowed_group(group):
 def create_groups():
     leaderGroup = Group(LEADERSHIP_GROUP_ID, '#helper')
     samsonGroup = Group(SAMSON_GROUP_ID, '#system')
-    testGroup = Group(TEST_GROUP_ID, 'test')
+    testGroup = Group(TEST_GROUP_ID, '#test')
 
     groups = [leaderGroup, samsonGroup, testGroup]
     return groups
