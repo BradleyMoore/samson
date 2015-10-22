@@ -11,7 +11,7 @@ class Callback(object):
         self.callback = callback
 
 
-    def parse_callback(self):
+    def parse_callback(self, groups):
         text = self.callback['text']
         words = text.split()
         if len(words) < 2:
@@ -20,48 +20,34 @@ class Callback(object):
         parsed_callback = {}
 
         potential_bot = words[0].lower()
-        parsed_callback['group'] = determine_called_group(potential_bot)
+        parsed_callback['group'] = self.determine_called_group(groups, potential_bot)
 
-        if called_group:
+        if parsed_callback['group']:
             potential_command = words[1].lower()
-            parsed_callback['command'] = determine_called_command(potential_command)
+            parsed_callback['command'] = self.determine_called_command(potential_command)
         else:
             return
 
-        if called_command and len(words) >= 3:
+        if parsed_callback['command'] and len(words) >= 3:
             potential_text = words[2:]
-            parsed_callback['message'] = dertermine_command_text(potential_text)
+            parsed_callback['message'] = self.dertermine_command_text(potential_text)
         else:
             parsed_callback['message'] = None
 
         return parsed_callback
 
 
-    def determine_called_group(self, potential_bot):
-        bots = ['#helper', '#system', '#test']
-        called_group = None
-        for bot in bots:
-            if bot == potential_bot:
-                if bot == '#helper':
-                    called_group = leaderGroup
-                elif bot == '#system':
-                    called_group = samsonGroup
-                elif bot == '#test':
-                    called_group = testGroup
-                break
-
-        return called_group
+    def determine_called_group(self, groups, potential_bot):
+        for group in groups:
+            if potential_bot == group.bot.name:
+                return group
 
 
     def determine_called_command(self, potential_command):
         commands = ['add', 'list', 'post', 'remove']
-        called_command = None
         for command in commands:
             if command == potential_command:
-                called_command = command
-                break
-
-        return called_command
+                return command
 
 
     def dertermine_command_text(self, potential_text):
@@ -78,18 +64,18 @@ class Callback(object):
 
 
 class Group(object):
-    def __init__(self, group_id):
+    def __init__(self, group_id, name):
         self.id = group_id
         self.url = BASE_URL + '/groups/' + self.id
 
         if self.id == SAMSON_GROUP_ID:
-            self.bot = self.Bot(SAMSON_BOT_ID)
+            self.bot = self.Bot(SAMSON_BOT_ID, name)
             self.allowed_access = False
         elif self.id == LEADERSHIP_GROUP_ID:
-            self.bot = self.Bot(LEADERSHIP_BOT_ID)
+            self.bot = self.Bot(LEADERSHIP_BOT_ID, name)
             self.allowed_access = True
         elif self.id == TEST_GROUP_ID:
-            self.bot = self.Bot(TEST_BOT_ID)
+            self.bot = self.Bot(TEST_BOT_ID, name)
             self.allowed_access = True
 
 
@@ -141,8 +127,9 @@ class Group(object):
 
 
     class Bot(object):
-        def __init__(self, bot_id):
+        def __init__(self, bot_id, name):
             self.id = bot_id
+            self.name = name
             self.url = BASE_URL + '/bots'
 
 
@@ -179,17 +166,17 @@ def check_for_allowed_group(group):
 
 
 def create_groups():
-    leaderGroup = Group(LEADERSHIP_GROUP_ID)
-    samsonGroup = Group(SAMSON_GROUP_ID)
-    testGroup = Group(TEST_GROUP_ID)
+    leaderGroup = Group(LEADERSHIP_GROUP_ID, '#helper')
+    samsonGroup = Group(SAMSON_GROUP_ID, '#system')
+    testGroup = Group(TEST_GROUP_ID, 'test')
 
     groups = [leaderGroup, samsonGroup, testGroup]
     return groups
 
 
-def get_requesting_group(groups):
+def get_requesting_group(callback, groups):
     for group in groups:
-        if groupme.callback['group_id'] == group.id:
+        if callback['group_id'] == group.id:
             return group
 
 
@@ -197,11 +184,11 @@ def activate(callback): # rename get_callback in views.py to this
     groupme = Callback(callback)
     groups = create_groups()
 
-    group = get_requesting_group(groups)
+    group = get_requesting_group(groupme.callback, groups)
     allowed = check_for_allowed_group(group)
     if not allowed:
         return
 
-    parsed_callback = groupme.parsed_callback()
+    parsed_callback = groupme.parse_callback(groups)
     if parsed_callback:
         parsed_callback['group'].bot.obey(parsed_callback)
