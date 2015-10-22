@@ -16,6 +16,7 @@ def index():
 def bot_callback():
     #callback = get_callback(request.json)
     activate(request.json)
+    return 'SuccessBot'
 
 
 #@app.route('/bot/post')
