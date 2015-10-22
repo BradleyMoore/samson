@@ -189,7 +189,7 @@ def create_groups():
 
 def get_requesting_group(groups):
     for group in groups:
-        if groupme.callback['group'] == group.id:
+        if groupme.callback['group_id'] == group.id:
             return group
 
 
