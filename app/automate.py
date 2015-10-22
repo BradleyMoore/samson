@@ -189,4 +189,4 @@ def activate(callback): # rename get_callback in views.py to this
 
     parsed_callback = groupme.parse_callback(groups)
     if parsed_callback:
-        parsed_callback['group'].bot.obey(requesting_group, parsed_callback)
+        parsed_callback['group'].bot.obey(group, parsed_callback)
