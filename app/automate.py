@@ -80,7 +80,6 @@ class Callback(object):
 class Group(object):
     def __init__(self, group_id):
         self.id = group_id
-        self.name = name
         self.url = BASE_URL + '/groups/' + id
 
         if self.id == SAMSON_GROUP_ID:
