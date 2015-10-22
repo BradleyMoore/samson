@@ -133,10 +133,14 @@ class Group(object):
             self.url = BASE_URL + '/bots'
 
 
-        def obey(self, parsed_callback):
+        def obey(self, groups, parsed_callback):
             group = parsed_callback['group']
             command = parsed_callback['command']
             message = parsed_callback['message']
+
+            leaderGroup = groups[0]
+            samsonGroup = groups[1]
+            testGroup = groups[2]
 
             if command == 'post':
                 group.bot.post(message)
@@ -191,4 +195,4 @@ def activate(callback): # rename get_callback in views.py to this
 
     parsed_callback = groupme.parse_callback(groups)
     if parsed_callback:
-        parsed_callback['group'].bot.obey(parsed_callback)
+        parsed_callback['group'].bot.obey(groups, parsed_callback)
