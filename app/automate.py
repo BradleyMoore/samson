@@ -138,10 +138,6 @@ class Group(object):
             command = parsed_callback['command']
             message = parsed_callback['message']
 
-            leaderGroup = groups[0]
-            samsonGroup = groups[1]
-            testGroup = groups[2]
-
             if command == 'post':
                 group.bot.post(message)
             elif command == 'list':
