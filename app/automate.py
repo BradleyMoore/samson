@@ -1,6 +1,6 @@
 import json, requests
 
-from config import ACCESS_TOKEN, BASE_URL
+from config import EJECTOMATIC_ACCESS_TOKEN, MOORE_ACCESS_TOKEN, BASE_URL
 from config import LEADERSHIP_BOT_ID, LEADERSHIP_GROUP_ID
 from config import SAMSON_BOT_ID, SAMSON_GROUP_ID
 from config import TEST_BOT_ID, TEST_GROUP_ID
