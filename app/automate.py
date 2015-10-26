@@ -10,7 +10,6 @@ class Callback(object):
     def __init__(self, callback):
         self.callback = callback
 
-
     def parse_callback(self, groups):
         text = self.callback['text']
         words = text.split()
@@ -36,12 +35,10 @@ class Callback(object):
 
         return parsed_callback
 
-
     def determine_called_group(self, groups, potential_bot):
         for group in groups:
             if potential_bot == group.bot.name:
                 return group
-
 
     def determine_called_command(self, potential_command):
         commands = ['add', 'list', 'post', 'remove']
@@ -49,11 +46,9 @@ class Callback(object):
             if command == potential_command:
                 return command
 
-
     def dertermine_command_text(self, potential_text):
         command_text = ' '.join(potential_text)
         return command_text
-
 
     def write_callback_to_file(self):
         f = open('callback.txt', 'w')
@@ -78,7 +73,6 @@ class Group(object):
             self.bot = self.Bot(TEST_BOT_ID, name)
             self.allowed_access = True
 
-
     def add_member(self, name, phone_number=None, email=None):
         if phone_number:
             phone_number = '+1' + phone_number
@@ -97,7 +91,6 @@ class Group(object):
         }
 
         r = requests.post(url, params = payload)
-
 
     def list_members(self):
         payload = {"token": ACCESS_TOKEN}
@@ -118,7 +111,6 @@ class Group(object):
 
         return members_string
 
-
     def remove_member(self, member_id):
         url = self.url + '/members/' + member_id + '/remove'
         payload = {"token": ACCESS_TOKEN}
@@ -131,7 +123,6 @@ class Group(object):
             self.id = bot_id
             self.name = name
             self.url = BASE_URL + '/bots'
-
 
         def obey(self, requesting_group, parsed_callback):
             group = parsed_callback['group']
@@ -146,7 +137,6 @@ class Group(object):
             else:
                 requesting_group.bot.post('Que?')
 
-
         def post(self, message=None, attachment=None):
             url = self.url + '/post'
             payload = {
@@ -156,11 +146,6 @@ class Group(object):
             }
 
             r = requests.post(url, params = payload)
-
-
-def check_for_allowed_group(group):
-    if group.allowed_access:
-        return True
 
 
 def create_groups():
@@ -183,10 +168,7 @@ def activate(callback): # rename get_callback in views.py to this
     groups = create_groups()
 
     group = get_requesting_group(groupme.callback, groups)
-    allowed = check_for_allowed_group(group)
-    if not allowed:
-        return
-
-    parsed_callback = groupme.parse_callback(groups)
-    if parsed_callback:
-        parsed_callback['group'].bot.obey(group, parsed_callback)
+    if group.allowed_access:
+        parsed_callback = groupme.parse_callback(groups)
+        if parsed_callback:
+            parsed_callback['group'].bot.obey(group, parsed_callback)
