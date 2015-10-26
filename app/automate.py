@@ -157,9 +157,9 @@ def create_groups():
     return groups
 
 
-def get_requesting_group(callback, groups):
+def get_requesting_group(callback_group, groups):
     for group in groups:
-        if callback['group_id'] == group.id:
+        if callback_group == group.id:
             return group
 
 
@@ -167,7 +167,7 @@ def activate(callback): # rename get_callback in views.py to this
     groupme = Callback(callback)
     groups = create_groups()
 
-    group = get_requesting_group(groupme.callback, groups)
+    group = get_requesting_group(groupme.callback_group, groups)
     if group.allowed_access:
         parsed_callback = groupme.parse_callback(groups)
         if parsed_callback:
