@@ -9,10 +9,11 @@ from config import TEST_BOT_ID, TEST_GROUP_ID
 class Callback(object):
     def __init__(self, callback):
         self.callback = callback
+        self.group_id = self.callback['group_id']
+        self.callback_text = self.callback['text']
 
     def parse_callback(self, groups):
-        text = self.callback['text']
-        words = text.split()
+        words = self.callback_text.split()
         if len(words) < 2:
             return
 
@@ -149,11 +150,10 @@ class Group(object):
 
 
 def create_groups():
-    leaderGroup = Group(LEADERSHIP_GROUP_ID, '#helper')
-    samsonGroup = Group(SAMSON_GROUP_ID, '#system')
-    testGroup = Group(TEST_GROUP_ID, '#test')
+    groups = [Group(LEADERSHIP_GROUP_ID, '#helper'),
+              Group(SAMSON_GROUP_ID, '#system'),
+              Group(TEST_GROUP_ID, '#test')]
 
-    groups = [leaderGroup, samsonGroup, testGroup]
     return groups
 
 
