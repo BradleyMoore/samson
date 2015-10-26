@@ -7,12 +7,39 @@ from config import TEST_BOT_ID, TEST_GROUP_ID
 
 
 class Callback(object):
+    """The response object from each post to any of my groupme groups.
+
+    The callback should be a json object that includes at a minumum a
+    group ID #, and a message's text.
+
+    Attributes:
+        callback (object): Json object that contains at a minimum
+                                a group id and a message's text.
+        callback_group (str): A string of numbers gathered from the callback.
+        callback_text (str): A message to be parsed.
+
+    """
+
     def __init__(self, callback):
         self.callback = callback
-        self.group_id = self.callback['group_id']
+        self.callback_group = self.callback['group_id']
         self.callback_text = self.callback['text']
 
     def parse_callback(self, groups):
+        """Parse callback for bot, command, and message
+
+        Takes the instance callback and breaks it apart to find
+        information on the called bot, the command, and the message
+        sent, if included.
+
+        Args:
+            groups (list): Contains each available group object.
+
+        Returns:
+            A dict containing the bot, command, and message, False for
+            each absent value.
+        """
+
         words = self.callback_text.split()
         if len(words) < 2:
             return
