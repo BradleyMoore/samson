@@ -294,22 +294,22 @@ def create_groups():
 
 
 def get_requesting_group(callback_group, groups):
-        """Determine which group the callback came from.
+    """Determine which group the callback came from.
 
-        Compares the callback group_id to the different groups ids to
-        determine which group called the script.
+    Compares the callback group_id to the different groups ids to
+    determine which group called the script.
 
-        Args:
-            callback_group (str): String of numbers representing the
-                                  group to groupme.
-            groups (list): All of my groupme groups.
+    Args:
+        callback_group (str): String of numbers representing the
+                              group to groupme.
+        groups (list): All of my groupme groups.
 
-        Returns:
-            The calling group or False if it doesn't exist.
-        """
+    Returns:
+        The calling group or False if it doesn't exist.
+    """
 
     for group in groups:
-        if group.id == callback_group:
+        if callback_group == group.id:
             return group
 
 
