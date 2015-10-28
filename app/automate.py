@@ -22,6 +22,7 @@ class Callback(object):
 
     def __init__(self, callback):
         self.callback = callback
+        self.callback_attachments = self.callback['attachments']
         self.callback_group = self.callback['group_id']
         self.callback_text = self.callback['text']
 
@@ -60,6 +61,8 @@ class Callback(object):
             parsed_callback['message'] = self.dertermine_command_text(potential_text)
         else:
             parsed_callback['message'] = None
+
+        parsed_callback['attachments'] = self.callback_attachments
 
         return parsed_callback
 
@@ -134,8 +137,8 @@ class Group(object):
 
         members_string = ''
         for key, value in members.iteritems():
-            members_string += '(%s, %s) :: ' %(value, key)
-        members_string = members_string[:-4]
+            members_string += '(%s, %s\n)' %(value, key)
+        members_string = members_string
 
         return members_string
 
@@ -153,24 +156,25 @@ class Group(object):
             self.url = BASE_URL + '/bots'
 
         def obey(self, requesting_group, parsed_callback):
-            group = parsed_callback['group']
+            attachments = parsed_callback['attachments']
             command = parsed_callback['command']
+            group = parsed_callback['group']
             message = parsed_callback['message']
 
             if command == 'post':
-                group.bot.post(message)
+                group.bot.post(message, attachments)
             elif command == 'list':
                 members = group.list_members()
                 requesting_group.bot.post(members)
             else:
                 requesting_group.bot.post('Que?')
 
-        def post(self, message=None, attachment=None):
+        def post(self, message, attachments=None):
             url = self.url + '/post'
             payload = {
                     'bot_id': self.id,
                     'text': message,
-                    'attachments': attachment
+                    'attachments': attachments
             }
 
             r = requests.post(url, params = payload)
