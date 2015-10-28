@@ -124,7 +124,7 @@ class Group(object):
         r = requests.post(url, params = payload)
 
     def list_members(self):
-        payload = {"token": ACCESS_TOKEN}
+        payload = {"token": MOORE_ACCESS_TOKEN}
 
         r = requests.get(self.url, params = payload)
 
