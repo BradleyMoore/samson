@@ -137,7 +137,7 @@ class Group(object):
 
         members_string = ''
         for key, value in members.iteritems():
-            members_string += '(%s, %s\n)' %(value, key)
+            members_string += '(%s, %s)\n' %(value, key)
         members_string = members_string
 
         return members_string
