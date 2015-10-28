@@ -1,9 +1,9 @@
 from flask import abort, flash, jsonify, redirect, render_template, request, url_for
 
 from app import app
-from .automate import activate
+from automate import activate
 #from bot import get_callback
-from .forms import LoginForm, RegisterForm
+from forms import LoginForm, RegisterForm
 
 
 @app.route('/')

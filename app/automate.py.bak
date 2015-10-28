@@ -176,7 +176,7 @@ class Group(object):
             members[member['id']] = member['nickname']
 
         members_string = ''
-        for key, value in members.items():
+        for key, value in members.iteritems():
             members_string += '(%s, %s)\n' %(value, key)
         members_string = members_string
 
