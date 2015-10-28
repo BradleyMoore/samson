@@ -13,11 +13,10 @@ class Callback(object):
     group ID #, and a message's text.
 
     Attributes:
-        callback (object): Json object that contains at a minimum
-                                a group id and a message's text.
+        callback (json): Json object that contains at a minimum
+                         a group id and a message's text.
         callback_group (str): A string of numbers gathered from the callback.
         callback_text (str): A message to be parsed.
-
     """
 
     def __init__(self, callback):
@@ -27,7 +26,7 @@ class Callback(object):
         self.callback_text = self.callback['text']
 
     def parse_callback(self, groups):
-        """Parse callback for bot, command, and message
+        """Parse callback for bot, command, and message.
 
         Takes the instance callback and breaks it apart to find
         information on the called bot, the command, and the message
@@ -37,8 +36,8 @@ class Callback(object):
             groups (list): Contains each available group object.
 
         Returns:
-            A dict containing the bot, command, and message, False for
-            each absent value.
+            A dict containing the bot, command, message, attachments,
+            or False for each absent value.
         """
 
         words = self.callback_text.split()
@@ -67,21 +66,25 @@ class Callback(object):
         return parsed_callback
 
     def determine_called_group(self, groups, potential_bot):
+        # Determine which group is being called by comparing bot names.
         for group in groups:
             if potential_bot == group.bot.name:
                 return group
 
     def determine_called_command(self, potential_command):
+        # Determines which command is called, if any.
         commands = ['add', 'list', 'post', 'remove']
         for command in commands:
             if command == potential_command:
                 return command
 
     def dertermine_command_text(self, potential_text):
+        # Determines the message sent, if any.
         command_text = ' '.join(potential_text)
         return command_text
 
     def write_callback_to_file(self):
+        # For debugging only; writes the callback to callback.txt.
         f = open('callback.txt', 'w')
         callback_json = json.dumps(self.callback)
         for line in callback_json:
@@ -90,6 +93,20 @@ class Callback(object):
 
 
 class Group(object):
+    """A groupme group used to manage user requests.
+
+    This class is used to manage the various groupme groups so the app
+    knows which group to communicate with. The bot is nested because it
+    is directily associated with this group in groupmes listings.
+
+    Attributes:
+        id (str): A string of numbers id-ing this group to groupme.
+        url (str): The url used for calls to this groupme group.
+        bot (Bot): The class of the associated groupme bot.
+        allowed_access (boolean): Whether or not the group is allowed
+                                  to make calls to this API.
+    """
+
     def __init__(self, group_id, name):
         self.id = group_id
         self.url = BASE_URL + '/groups/' + self.id
@@ -105,6 +122,17 @@ class Group(object):
             self.allowed_access = True
 
     def add_member(self, name, phone_number=None, email=None):
+        """Add a new member to the groupme group.
+
+        Args:
+            name (str): The name to be used in the groupme group.
+            phone_number (str): The new member's phone number.
+            email (str): The new member's email address.
+
+        Returns:
+            Nothing is returned.
+        """
+
         if phone_number:
             phone_number = '+1' + phone_number
 
@@ -124,6 +152,18 @@ class Group(object):
         r = requests.post(url, params = payload)
 
     def list_members(self):
+        """List all members from the called group in calling group.
+
+        Gets all members from the called group, parses them into a
+        string ready to post back in the calling group's chat thread.
+
+        Args:
+            No arguments are used.
+
+        Returns:
+            A string formatted to post in the groupme chat thread.
+        """
+
         payload = {"token": MOORE_ACCESS_TOKEN}
 
         r = requests.get(self.url, params = payload)
@@ -143,19 +183,58 @@ class Group(object):
         return members_string
 
     def remove_member(self, member_id):
+        """Remove a member from the groupme group.
+
+        Args:
+            member_id (str): A string of numbers representing the
+                             member to the group.
+
+        Returns:
+            Nothing is returned.
+        """
+
         url = self.url + '/members/' + member_id + '/remove'
         payload = {"token": ACCESS_TOKEN}
 
         r = requests.post(url, params = payload)
 
-
     class Bot(object):
+        """A bot associated with a specific groupme group.
+
+        This class is directly related to the Group it is nested in.
+        It is associated on groupme's servers. The bot's main purpost
+        is to post on a user's behalf so the rest of the users don't
+        know exactly who is sending the message. It's main usage is for
+        system messages relating to the entire group.
+
+        Attributes:
+            id (str): A string of numbers id-ing this bot to groupme.
+            name (str): The bot's name used to check if it is called.
+            url (str): The url used for calls to this groupme bot.
+        """
+
         def __init__(self, bot_id, name):
             self.id = bot_id
             self.name = name
             self.url = BASE_URL + '/bots'
 
         def obey(self, requesting_group, parsed_callback):
+            """Calls correct action based on the user's directive.
+
+            Acts upon the command called by calling the appropriate
+            method.
+
+            Args:
+                requesting_group (str): Calling group used to send
+                                        messages back to the user if
+                                        necessary.
+                parsed_callback (dict): The important parts of the
+                                        callback ready for use.
+
+            Returns:
+                Nothing is returned.
+            """
+
             attachments = parsed_callback['attachments']
             command = parsed_callback['command']
             group = parsed_callback['group']
@@ -170,6 +249,23 @@ class Group(object):
                 requesting_group.bot.post('Que?')
 
         def post(self, message, attachments=None):
+            """Post a message to the appropriate groupme group.
+
+            Takes a message and any attachments and posts them to the
+            correct group based on the bot called in the callback.
+
+            Args:
+                message (str): The command modifies. Usually the
+                               message to be posted to the groupme
+                               group.
+                attachments (list of dicts): Attachments to be posted
+                                             to the correct groupme
+                                             group.
+
+            Returns:
+                Nothing is returned.
+            """
+
             url = self.url + '/post'
             payload = {
                     'bot_id': self.id,
@@ -181,6 +277,15 @@ class Group(object):
 
 
 def create_groups():
+    """Creates all of my groupme groups as Groups() in a list.
+
+    Args:
+        No arguments are used.
+
+    Returns:
+        A list of all created groups.
+    """
+
     groups = [Group(LEADERSHIP_GROUP_ID, '#helper'),
               Group(SAMSON_GROUP_ID, '#system'),
               Group(TEST_GROUP_ID, '#test')]
@@ -189,12 +294,36 @@ def create_groups():
 
 
 def get_requesting_group(callback_group, groups):
+        """Determine which group the callback came from.
+
+        Compares the callback group_id to the different groups ids to
+        determine which group called the script.
+
+        Args:
+            callback_group (str): String of numbers representing the
+                                  group to groupme.
+            groups (list): All of my groupme groups.
+
+        Returns:
+            The calling group or False if it doesn't exist.
+        """
+
     for group in groups:
-        if callback_group == group.id:
+        if group.id == callback_group:
             return group
 
 
-def activate(callback): # rename get_callback in views.py to this
+def activate(callback):
+    """Activates everything needed for the bot callback system to work.
+
+    Args:
+        callback (json): The groupme callback sent everytime a message
+                         is posted in one of my groups.
+
+    Returns:
+        Nothing is returned.
+    """
+
     groupme = Callback(callback)
     groups = create_groups()
 
