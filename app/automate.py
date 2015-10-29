@@ -168,7 +168,7 @@ class Group(object):
 
         r = requests.get(self.url, params = payload)
 
-        data = json.loads(r.json())
+        data = r.json()
         node = data['response']['members']
 
         members = {}
