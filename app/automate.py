@@ -245,6 +245,8 @@ class Group(object):
             elif command == 'list':
                 members = group.list_members()
                 requesting_group.bot.post(members)
+            elif command == 'remove':
+                group.remove_member(message)
             else:
                 requesting_group.bot.post('Que?')
 
