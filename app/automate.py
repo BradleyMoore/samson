@@ -246,13 +246,16 @@ class Group(object):
                 members = group.list_members()
                 requesting_group.bot.post(members)
             elif command == 'remove':
+                members = group.list_members()
                 if message:
-                    members = group.list_members()
                     if message in members:
                         group.remove_member(message)
                     else:
                         requesting_group.bot.post('"' + message + '" is not a valid member ID.')
+                        requesting_group.bot.post(members)
+                        requesting_group.bot.post('You must include a valid member ID.')
                 else:
+                    requesting_group.bot.post(members)
                     requesting_group.bot.post('You must include the member ID.')
             else:
                 requesting_group.bot.post('Que?')
