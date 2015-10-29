@@ -194,7 +194,7 @@ class Group(object):
         """
 
         url = self.url + '/members/' + member_id + '/remove'
-        payload = {"token": ACCESS_TOKEN}
+        payload = {"token": EJECTOMATIC_ACCESS_TOKEN}
 
         r = requests.post(url, params = payload)
 
