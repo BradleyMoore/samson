@@ -251,8 +251,8 @@ class Group(object):
                     if message in members:
                         group.remove_member(message)
                     else:
-                        requesting_group.bot.post('"' + message +
-                            '" is not a valid member ID.\n\n' + members)
+                        requesting_group.bot.post(members + '"' + message +
+                            '" is not a valid member ID.\n\n')
                 else:
                     requesting_group.bot.post(members +
                         '\n\nYou must include the member ID.')
